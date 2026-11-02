@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAT Prep Tracker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>📘 SAT Prep Tracker</h1>
+  <p id="greeting"></p>
+  <nav>
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="scores">Practice Tests</button>
+    <button class="tab" data-tab="topics">Topics</button>
+    <button class="tab" data-tab="schedule">Schedule</button>
+    <button class="tab" data-tab="settings">Settings</button>
+  </nav>
+</header>
+
+<main>
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="panel active">
+    <div class="cards">
+      <div class="card"><span class="label">Days to test</span><span class="big" id="k-days">–</span></div>
+      <div class="card"><span class="label">Latest score</span><span class="big" id="k-latest">–</span></div>
+      <div class="card"><span class="label">Best score</span><span class="big" id="k-best">–</span></div>
+      <div class="card"><span class="label">Target</span><span class="big" id="k-target">–</span><span class="sub" id="k-gap"></span></div>
+      <div class="card"><span class="label">Study this week</span><span class="big" id="k-week">0h</span><span class="sub" id="k-week-sub"></span></div>
+      <div class="card"><span class="label">Sessions done</span><span class="big" id="k-done">0</span><span class="sub" id="k-done-sub"></span></div>
+    </div>
+    <div class="box">
+      <h2>Score trend</h2>
+      <div id="chart"></div>
+      <div class="legend"><span class="dot t"></span>Total <span class="dot rw"></span>Reading &amp; Writing <span class="dot m"></span>Math <span class="dot tg"></span>Target</div>
+    </div>
+    <div class="box">
+      <h2>Focus areas</h2>
+      <div id="focus"></div>
+    </div>
+    <div class="box">
+      <h2>Up next</h2>
+      <div id="upnext"></div>
+    </div>
+  </section>
+
+  <!-- SCORES -->
+  <section id="scores" class="panel">
+    <div class="box">
+      <h2>Log a practice test</h2>
+      <form id="score-form" class="grid">
+        <label>Date <input type="date" id="s-date" required></label>
+        <label>Test name <input type="text" id="s-name" placeholder="e.g. Bluebook Practice Test 3"></label>
+        <label>Reading &amp; Writing (200–800) <input type="number" id="s-rw" min="200" max="800" step="10" required></label>
+        <label>Math (200–800) <input type="number" id="s-math" min="200" max="800" step="10" required></label>
+        <label class="wide">Notes (mistakes, timing, ideas) <input type="text" id="s-notes"></label>
+        <button type="submit" class="primary">Add result</button>
+      </form>
+    </div>
+    <div class="box">
+      <h2>History</h2>
+      <div class="table-wrap">
+        <table id="score-table">
+          <thead><tr><th>Date</th><th>Test</th><th>R&amp;W</th><th>Math</th><th>Total</th><th>Notes</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOPICS -->
+  <section id="topics" class="panel">
+    <div class="box">
+      <h2>Topic confidence</h2>
+      <p class="hint">Rate each topic from 1 (struggling) to 5 (confident). The schedule gives weaker topics more practice time.</p>
+      <div id="topic-list"></div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section id="schedule" class="panel">
+    <div class="box">
+      <h2>Plan generator</h2>
+      <p class="hint">Choose study days and session length, then generate a plan up to the test date (max 12 weeks). Completed sessions are kept.</p>
+      <div class="days" id="day-picker"></div>
+      <div class="grid">
+        <label>Minutes per session <input type="number" id="g-min" min="15" max="240" step="5" value="60"></label>
+        <label>Full practice test every
+          <select id="g-test">
+            <option value="0">Don't schedule</option>
+            <option value="1">week</option>
+            <option value="2" selected>2 weeks</option>
+            <option value="3">3 weeks</option>
+            <option value="4">4 weeks</option>
+          </select>
+        </label>
+        <button id="generate" class="primary">Generate plan</button>
+      </div>
+    </div>
+    <div class="box">
+      <h2>Add a session</h2>
+      <form id="session-form" class="grid">
+        <label>Date <input type="date" id="a-date" required></label>
+        <label>Topic / activity <input type="text" id="a-topic" required></label>
+        <label>Minutes <input type="number" id="a-min" min="5" max="480" value="45" required></label>
+        <button type="submit">Add</button>
+      </form>
+    </div>
+    <div class="box">
+      <h2>Sessions</h2>
+      <div class="row-actions">
+        <label class="inline"><input type="checkbox" id="hide-done"> Hide completed</label>
+        <button id="clear-future" class="danger">Clear upcoming</button>
+      </div>
+      <div id="session-list"></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="settings" class="panel">
+    <div class="box">
+      <h2>Profile</h2>
+      <div class="grid">
+        <label>Student name <input type="text" id="p-name"></label>
+        <label>SAT test date <input type="date" id="p-date"></label>
+        <label>Target total score <input type="number" id="p-target" min="400" max="1600" step="10"></label>
+        <button id="save-profile" class="primary">Save</button>
+      </div>
+    </div>
+    <div class="box">
+      <h2>Backup &amp; move between devices</h2>
+      <p class="hint">Data is stored in this browser only. Export a backup regularly, and import it on another device or browser.</p>
+      <div class="row-actions">
+        <button id="export">Export data</button>
+        <label class="file-btn">Import data <input type="file" id="import" accept="application/json" hidden></label>
+        <button id="reset" class="danger">Erase everything</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Data is saved in your browser (localStorage). Nothing is sent anywhere.</footer>
+<script src="app.js"></script>
+</body>
+</html>
